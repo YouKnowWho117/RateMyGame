@@ -5,8 +5,9 @@ from app.forms import LoginForm, RegistrationForm
 from app.models import Game, User
 from app.forms import PostForm
 from app.models import Post
+from flask import jsonify
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if "User" in session:
@@ -79,18 +80,6 @@ def Registrierung():
     return render_template('Registrierung.html', title='Register', form=form)
 
 
-@app.route('/rate/<int:game_id>', methods=['GET', 'POST'])
-def rate_game(game_id):
-    if request.method == 'POST':
-        rating = float(request.form['rating'])
-        game = game.query.get(game_id)
-        game.rating = rating
-        db.session.commit()
-        flash('Rating submitted successfully', 'success')
-        return redirect(url_for('dashboard'))
-    game = game.query.get(game_id)
-    return render_template('rate_game.html', game=game)
-
 @app.route('/initialize', methods=['GET', 'POST'])
 def seed_gamedata():
     db.session.query(Game).delete()
@@ -103,3 +92,13 @@ def seed_gamedata():
     db.session.add(game3)
     db.session.commit()
     return 'Seeding data has been added'
+
+@app.route('/api/getcomments')
+def getcomments():
+    comments= Post.query.all()
+    return jsonify([x.todict() for x in comments])
+
+@app.route('/api/getgames')
+def getgames():
+    games= Game.querry.all()
+    return jsonify([x.todict() for x in games])
