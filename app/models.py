@@ -29,6 +29,8 @@ class Game(db.Model):
     filename = db.Column(db.String(255), nullable=False)
     rating= db.Column(db.Float, nullable=True)
 
+    def todict(self):
+        return dict(id = self.id, game = self.game, photo_path= self.photo_path, rating= self.rating)
     
 class Post(db.Model):
     id= db.Column(db.Integer, primary_key=True)
@@ -41,3 +43,5 @@ class Post(db.Model):
     def __repr__(self):
         return '<post {}>'.format(self.post)
     
+    def todict(self):
+        return dict(id = self.id, post = self.post, date= self.date, rating= self.rating)
