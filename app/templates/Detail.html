@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h1> {{ game.game }} </h1>
+    <h2>Raiting {{ game.rating }} von 10.0</h2>
+    <img src="{{ game.photo_path }}" width="300px">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.post.label}}<br>
+            {{ form.post(cols=32, rows=4)}}<br>
+            {% for error in form.post.errors %}
+            <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.rating.label}}<br>
+            {{ form.rating(cols=10, rows=1)}}<br>
+            {% for error in form.rating.errors %}
+            <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% for post in posts %}
+    <div><p> {{ post.username }} {{ post.date }} <br><b>Comment:</b> {{ post.post }} <b>Userrating:</b> {{ post.rating }}</p></div>
+    {% endfor %}
+{% endblock %}
