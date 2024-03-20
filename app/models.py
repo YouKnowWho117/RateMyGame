@@ -1,7 +1,9 @@
+#import libs and internal files
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
 
+#DB table User
 class User(db.Model):
     id= db.Column(db.Integer, primary_key=True)
     username= db.Column(db.String(255), index=True, unique=True)
@@ -17,21 +19,22 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
    
-
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
+#DB table Game
 class Game(db.Model):
     id= db.Column(db.Integer, primary_key=True)
     game= db.Column(db.String(255))
     photo_path= db.Column(db.String(255), nullable=False)
     filename = db.Column(db.String(255), nullable=False)
     rating= db.Column(db.Float, nullable=True)
-
-    def todict(self):
+#add todict def for API
+    def todictgames(self):
         return dict(id = self.id, game = self.game, photo_path= self.photo_path, rating= self.rating)
-    
+
+#DB table Post
 class Post(db.Model):
     id= db.Column(db.Integer, primary_key=True)
     game_id= db.Column(db.Integer, db.ForeignKey('game.id'))
@@ -42,6 +45,6 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<post {}>'.format(self.post)
-    
-    def todict(self):
+#add todict def for API
+    def todictcomments(self):
         return dict(id = self.id, post = self.post, date= self.date, rating= self.rating)

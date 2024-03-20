@@ -1,3 +1,4 @@
+#import libs and internal files
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
 from app.models import User
@@ -7,6 +8,7 @@ from app.forms import PostForm
 from app.models import Post
 from flask import jsonify
 
+#set route for / and /index to loginpage
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -22,7 +24,7 @@ def index():
         return redirect(url_for('Uebersicht'))
     return render_template("index.html", title='Dashboard', form=form)
 
-
+#set route for /Detail
 @app.route('/Detail/<id>', methods=['GET', 'POST'])
 def Detail(id):
     form = PostForm()
@@ -46,7 +48,7 @@ def Detail(id):
     else:
         return redirect(url_for('index'))
 
-
+#set route for /Uebersicht (Dashboard)
 @app.route('/Uebersicht')
 def Uebersicht():
     if "User" in session:
@@ -55,13 +57,14 @@ def Uebersicht():
     else:
         return redirect(url_for('index'))
 
-
+#set route for /logout for redirection to index
 @app.route('/logout')
 def logout():
     if "User" in session:
         session.pop("User", None)
     return redirect(url_for('index'))
 
+#set route for /Registrierung
 @app.route('/Registrierung', methods=['GET', 'POST'])
 def Registrierung():
     if "User" in session:
@@ -79,7 +82,7 @@ def Registrierung():
         return redirect(url_for('index'))
     return render_template('Registrierung.html', title='Register', form=form)
 
-
+#set route for /initialize (Game DB seeding)
 @app.route('/initialize', methods=['GET', 'POST'])
 def seed_gamedata():
     db.session.query(Game).delete()
@@ -93,12 +96,14 @@ def seed_gamedata():
     db.session.commit()
     return 'Seeding data has been added'
 
+#set route for /api/getcomments (query comments)
 @app.route('/api/getcomments')
 def getcomments():
     comments= Post.query.all()
-    return jsonify([x.todict() for x in comments])
+    return jsonify([x.todictcomments() for x in comments])
 
+#set route for /api/getgames (query games)
 @app.route('/api/getgames')
 def getgames():
     games= Game.querry.all()
-    return jsonify([x.todict() for x in games])
+    return jsonify([x.todictgames() for x in games])
