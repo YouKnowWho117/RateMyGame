@@ -109,7 +109,7 @@ def getcomments():
 @app.route('/api/getgames')
 def getgames():
     if "User" in session:
-        games= Game.querry.all()
+        games= Game.query.all()
         return jsonify([x.todictgames() for x in games])
     else:
         return redirect(url_for('index'))
