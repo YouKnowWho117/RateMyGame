@@ -99,11 +99,17 @@ def seed_gamedata():
 #set route for /api/getcomments (query comments)
 @app.route('/api/getcomments')
 def getcomments():
-    comments= Post.query.all()
-    return jsonify([x.todictcomments() for x in comments])
+    if "User" in session:
+        comments= Post.query.all()
+        return jsonify([x.todictcomments() for x in comments])
+    else:
+        return redirect(url_for('index'))
 
 #set route for /api/getgames (query games)
 @app.route('/api/getgames')
 def getgames():
-    games= Game.querry.all()
-    return jsonify([x.todictgames() for x in games])
+    if "User" in session:
+        games= Game.querry.all()
+        return jsonify([x.todictgames() for x in games])
+    else:
+        return redirect(url_for('index'))
